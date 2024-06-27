@@ -1,8 +1,9 @@
 import { View, FlatList, TouchableOpacity, Image } from "react-native";
+import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import useAppwrite from "../../lib/useAppwrite";
-import { getUserPosts } from "../../lib/appwrite";
+import { getUserPosts, signOut } from "../../lib/appwrite";
 
 import { useGlobalContext } from "../../context/GlobalProvider";
 
@@ -15,7 +16,13 @@ const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
 
-  const logout = () => {};
+  const logout = async () => {
+    await signOut();
+    setUser(null);
+    setIsLoggedIn(false);
+
+    router.replace("sign-in");
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
